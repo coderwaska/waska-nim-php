@@ -5,6 +5,7 @@ namespace Wastukancana;
 class Nim extends Parser
 {
     private const MIN_YEAR = 2001;
+
     private PDDikti $pddikti;
 
     public function __construct($nim)
@@ -17,19 +18,19 @@ class Nim extends Parser
 
     private function isValid(): bool
     {
-        if (strlen($this->nim) !== 9) {
-            throw new \InvalidArgumentException('NIM must be 9 characters');
+        if (strlen($this->nim) < 8 || strlen($this->nim) > 9) {
+            throw new \InvalidArgumentException('NIM must be 8 or 9 characters');
         }
 
-        if (!ctype_digit($this->nim)) {
+        if (! ctype_digit($this->nim)) {
             throw new \InvalidArgumentException('NIM must contain only numbers');
         }
 
-        if (!$this->isValidAdmissionYear()) {
+        if (! $this->isValidAdmissionYear()) {
             throw new \InvalidArgumentException('Admission year is invalid');
         }
 
-        if (!$this->isValidStudy()) {
+        if (! $this->isValidStudy()) {
             throw new \InvalidArgumentException('Study cannot be found');
         }
 
@@ -55,13 +56,15 @@ class Nim extends Parser
     {
         $currentYear = intval(date('Y'));
         $admissionYear = $this->getAdmissionYear();
+
         return $admissionYear >= self::MIN_YEAR && $admissionYear <= $currentYear;
     }
 
     public function getAdmissionYear(): int
     {
         $year = $this->getAdmissionYearCode();
-        return intval('20' . $year);
+
+        return intval('20'.$year);
     }
 
     public function isValidStudy(): bool
@@ -81,7 +84,7 @@ class Nim extends Parser
 
     public function dump(): Student
     {
-        $student = new Student();
+        $student = new Student;
         $student->nim = $this->getNIM();
         $student->name = $this->getName();
         $student->gender = $this->getGender();

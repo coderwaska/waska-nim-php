@@ -8,11 +8,15 @@ use Psr\Http\Message\ResponseInterface;
 class PDDikti
 {
     private Client $http;
+
     private string $nim;
 
     private ?string $id = null;
+
     private ?string $name = null;
+
     private ?string $gender = null;
+
     private ?bool $isGraduated = null;
 
     public function __construct(string $nim)
@@ -21,7 +25,7 @@ class PDDikti
             'base_uri' => 'https://api-pddikti.kemdiktisaintek.go.id',
             'verify' => false,
         ]);
-        $this->nim = $nim;
+        $this->nim = ltrim($nim, '0');
     }
 
     private function fetchData(string $endpoint): ?object
@@ -48,6 +52,7 @@ class PDDikti
                     'Origin' => 'https://pddikti.kemdiktisaintek.go.id',
                 ],
             ]);
+
             return $this->parseResponse($response);
         } catch (\Exception $e) {
             return null;
@@ -57,6 +62,7 @@ class PDDikti
     private function parseResponse(ResponseInterface $response): ?object
     {
         $content = $response->getBody()->getContents();
+
         return json_decode($content);
     }
 
@@ -68,16 +74,16 @@ class PDDikti
 
         $data = $this->fetchData("pencarian/all/$this->nim");
 
-        if (!$data || empty($data->mahasiswa)) {
+        if (! $data || empty($data->mahasiswa)) {
             return;
         }
 
         $filtered = array_filter(
             $data->mahasiswa,
-            fn($i) => isset($i->sinkatan_pt) && $i->sinkatan_pt === 'STT WASTUKANCANA'
+            fn ($i) => isset($i->sinkatan_pt) && $i->sinkatan_pt === 'STT WASTUKANCANA'
         );
 
-        $selected = !empty($filtered) ? reset($filtered) : null;
+        $selected = ! empty($filtered) ? reset($filtered) : null;
 
         $this->id = $selected->id ?? null;
         $this->name = $selected->nama ?? null;
@@ -91,13 +97,13 @@ class PDDikti
 
         $this->prepareList();
 
-        if (!$this->id) {
+        if (! $this->id) {
             return;
         }
 
         $data = $this->fetchData("detail/mhs/$this->id");
 
-        if (!$data) {
+        if (! $data) {
             return;
         }
 
@@ -108,18 +114,21 @@ class PDDikti
     public function getName(): ?string
     {
         $this->prepareList();
+
         return $this->name;
     }
 
     public function getGender(): ?string
     {
         $this->prepareDetail();
+
         return $this->gender;
     }
 
     public function getIsGraduated(): ?bool
     {
         $this->prepareDetail();
+
         return $this->isGraduated;
     }
 }

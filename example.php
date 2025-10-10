@@ -2,10 +2,10 @@
 
 use Wastukancana\Nim;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 try {
-    $nim = new Nim('211351143');
+    $nim = new Nim('91151001');
 
     var_dump($nim->dump());
 } catch (\Exception $e) {

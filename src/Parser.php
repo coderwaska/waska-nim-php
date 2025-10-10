@@ -8,12 +8,12 @@ class Parser
 
     public function __construct($nim)
     {
-        $this->nim = trim($nim);
+        $this->nim = str_pad(trim($nim), 9, '0', STR_PAD_LEFT);
     }
 
     public function getNIM(): string
     {
-        return $this->nim;
+        return ltrim($this->nim, '0');
     }
 
     public function getAdmissionYearCode(): string
