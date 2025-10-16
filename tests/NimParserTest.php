@@ -3,16 +3,11 @@
 use PHPUnit\Framework\TestCase;
 use Wastukancana\Nim;
 use Wastukancana\Student;
+use Wastukancana\StudentProviderInterface;
 
 final class NimParserTest extends TestCase
 {
     const NIM_TEST = '211351143';
-
-    const EXPECTED_NAME = 'SULUH SULISTIAWAN';
-
-    const EXPECTED_GENDER = 'M';
-
-    const EXPECTED_GRADUATION = false;
 
     const EXPECTED_YEAR = 2021;
 
@@ -44,12 +39,12 @@ final class NimParserTest extends TestCase
     public function test_can_dump()
     {
         $dump = $this->nim->dump();
-
         $student = new Student;
+
         $student->nim = self::NIM_TEST;
-        $student->name = self::EXPECTED_NAME;
-        $student->gender = self::EXPECTED_GENDER;
-        $student->isGraduated = self::EXPECTED_GRADUATION;
+        $student->name = null;
+        $student->gender = null;
+        $student->isGraduated = null;
         $student->admissionYear = self::EXPECTED_YEAR;
         $student->study = self::EXPECTED_STUDY;
         $student->educationLevel = self::EXPECTED_LEVEL;
@@ -66,17 +61,17 @@ final class NimParserTest extends TestCase
 
     public function test_can_get_name()
     {
-        $this->assertEquals(self::EXPECTED_NAME, $this->nim->getName());
+        $this->assertNull($this->nim->getName());
     }
 
     public function test_can_get_gender()
     {
-        $this->assertEquals(self::EXPECTED_GENDER, $this->nim->getGender());
+        $this->assertNull($this->nim->getGender());
     }
 
     public function test_can_get_is_graduated()
     {
-        $this->assertEquals(self::EXPECTED_GRADUATION, $this->nim->getIsGraduated());
+        $this->assertNull($this->nim->getIsGraduated());
     }
 
     public function test_can_get_first_semester()
@@ -104,33 +99,66 @@ final class NimParserTest extends TestCase
         $this->assertEquals(self::EXPECTED_LEVEL, $this->nim->getEducationLevel());
     }
 
-    public function test_nim_with_too_short_length_throws_exception()
+    /**
+     * @dataProvider invalidNimsProvider
+     */
+    public function test_invalid_nims_throw_exception(string $badNim): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new Nim('1');
+        new Nim($badNim);
     }
 
-    public function test_nim_with_too_long_length_throws_exception()
+    public function invalidNimsProvider(): array
     {
-        $this->expectException(InvalidArgumentException::class);
-        new Nim('21135114300');
+        return [
+            'too short' => ['1'],
+            'too long' => ['21135114300'],
+            'non numeric' => ['2113511a3'],
+            'invalid admission year' => ['991351143'],
+            'non existent study' => ['210001143'],
+        ];
     }
 
-    public function test_nim_with_non_numeric_characters_throws_exception()
+    public function test_can_use_provider_fqcn_without_token(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        new Nim('2113511a3');
+        $nim = new Nim(self::NIM_TEST, FakeProviderForNimTest::class);
+
+        $this->assertSame('FAKE', $nim->getName());
+        $this->assertSame('M', $nim->getGender());
+        $this->assertFalse($nim->getIsGraduated());
+        $this->assertSame([self::NIM_TEST, null], FakeProviderForNimTest::$lastConstructArgs);
     }
 
-    public function test_invalid_admission_year_throws_exception()
+    public function test_can_use_provider_fqcn_with_token(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        new Nim('991351143');
+        $nim = new Nim(self::NIM_TEST, FakeProviderForNimTest::class, ['token' => 'TOKEN']);
+
+        $this->assertSame('FAKE', $nim->getName());
+        $this->assertSame([self::NIM_TEST, 'TOKEN'], FakeProviderForNimTest::$lastConstructArgs);
+    }
+}
+
+class FakeProviderForNimTest implements StudentProviderInterface
+{
+    public static $lastConstructArgs = null;
+
+    public function __construct(string $nim, ?string $token = null)
+    {
+        self::$lastConstructArgs = [$nim, $token];
     }
 
-    public function test_non_existent_study_throws_exception()
+    public function getName(): ?string
     {
-        $this->expectException(InvalidArgumentException::class);
-        new Nim('210001143');
+        return 'FAKE';
+    }
+
+    public function getGender(): ?string
+    {
+        return 'M';
+    }
+
+    public function getIsGraduated(): ?bool
+    {
+        return false;
     }
 }

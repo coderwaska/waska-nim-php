@@ -1,47 +1,48 @@
 {
-    "name": "wastukancana/nim",
-    "type": "library",
-    "description": "STT Wastukancana Student ID (NIM) Parser",
-    "version": "1.2.1",
-    "homepage": "https://github.com/sooluh/waska-nim",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Abu Masyail",
-            "email": "suluhs@aol.com",
-            "homepage": "https://suluh.my.id",
-            "role": "Maintainer"
-        }
-    ],
-    "support": {
-        "source": "http://github.com/sooluh/waska-nim",
-        "docs": "https://github.com/sooluh/waska-nim/blob/master/README.md",
-        "issues": "https://github.com/sooluh/waska-nim/issues"
-    },
-    "scripts": {
-        "psr2check": [
-            "@php vendor/bin/phpcs --standard=PSR2 --ignore=tests/*,vendor/* ."
-        ],
-        "psr2autofix": [
-            "@php vendor/bin/phpcbf --standard=PSR2 --ignore=tests/*,vendor/* ."
-        ],
-        "tests": [
-            "@php vendor/bin/phpunit --testdox tests",
-            "@php vendor/bin/phpunit --coverage-html reports"
-        ]
-    },
-    "autoload": {
-        "psr-4": {
-            "Wastukancana\\": "src/"
-        }
-    },
-    "require": {
-        "php": "^7.4|^8.0",
-        "guzzlehttp/guzzle": "^7.8"
-    },
-    "require-dev": {
-        "squizlabs/php_codesniffer": "^3.7",
-        "phpunit/phpunit": "^9.6",
-        "mikey179/vfsstream": "^1.6"
+  "name": "wastukancana/nim",
+  "type": "library",
+  "description": "STT Wastukancana Student ID (NIM) Parser",
+  "version": "1.2.1",
+  "homepage": "https://github.com/sooluh/waska-nim",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Abu Masyail",
+      "email": "suluhs@aol.com",
+      "homepage": "https://suluh.my.id",
+      "role": "Maintainer"
     }
+  ],
+  "support": {
+    "source": "http://github.com/sooluh/waska-nim",
+    "docs": "https://github.com/sooluh/waska-nim/blob/master/README.md",
+    "issues": "https://github.com/sooluh/waska-nim/issues"
+  },
+  "scripts": {
+    "psr2check": [
+      "@php vendor/bin/phpcs --standard=PSR2 --ignore=tests/*,vendor/* ."
+    ],
+    "psr2autofix": [
+      "@php vendor/bin/phpcbf --standard=PSR2 --ignore=tests/*,vendor/* ."
+    ],
+    "tests": [
+      "@php vendor/bin/phpunit --testdox tests",
+      "@php vendor/bin/phpunit --coverage-html reports"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "Wastukancana\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^7.4|^8.0",
+    "guzzlehttp/guzzle": "^7.8",
+    "laravel/pint": "^1.25"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7",
+    "phpunit/phpunit": "^9.6",
+    "mikey179/vfsstream": "^1.6"
+  }
 }

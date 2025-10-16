@@ -8,14 +8,24 @@ class Nim extends Parser
 {
     private const MIN_YEAR = 2001;
 
-    private PDDikti $pddikti;
+    private ?StudentProviderInterface $provider = null;
 
-    public function __construct($nim)
+    public function __construct($nim, ?string $provider = null, array $options = [])
     {
         parent::__construct($nim);
 
         $this->isValid();
-        $this->pddikti = new PDDikti($this->nim);
+
+        if (is_string($provider)
+            && class_exists($provider)
+            && is_subclass_of($provider, StudentProviderInterface::class)
+        ) {
+            if (array_key_exists('token', $options)) {
+                $this->provider = new $provider($this->nim, $options['token']);
+            } else {
+                $this->provider = new $provider($this->nim);
+            }
+        }
     }
 
     private function isValid(): bool
@@ -41,17 +51,17 @@ class Nim extends Parser
 
     public function getName()
     {
-        return $this->pddikti->getName();
+        return $this->provider ? $this->provider->getName() : null;
     }
 
     public function getGender()
     {
-        return $this->pddikti->getGender();
+        return $this->provider ? $this->provider->getGender() : null;
     }
 
     public function getIsGraduated()
     {
-        return $this->pddikti->getIsGraduated();
+        return $this->provider ? $this->provider->getIsGraduated() : null;
     }
 
     public function isValidAdmissionYear(): bool

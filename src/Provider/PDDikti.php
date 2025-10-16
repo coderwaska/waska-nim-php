@@ -1,12 +1,13 @@
 <?php
 
-namespace Wastukancana;
+namespace Wastukancana\Provider;
 
 use Exception;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
+use Wastukancana\StudentProviderInterface;
 
-class PDDikti
+class PDDikti implements StudentProviderInterface
 {
     private Client $http;
 
@@ -20,9 +21,9 @@ class PDDikti
 
     private ?bool $isGraduated = null;
 
-    public function __construct(string $nim)
+    public function __construct(string $nim, ?Client $client = null)
     {
-        $this->http = new Client([
+        $this->http = $client ?? new Client([
             'base_uri' => 'https://api-pddikti.kemdiktisaintek.go.id',
             'verify' => false,
         ]);

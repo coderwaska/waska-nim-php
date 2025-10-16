@@ -24,7 +24,7 @@ Install the package with:
 composer require wastukancana/nim
 ```
 
-## Example
+## Usage
 
 ```php
 <?php
@@ -42,13 +42,60 @@ try {
 }
 ```
 
+Example dump without provider (name/gender/isGraduated null):
+
+```php
+$student = (new Nim('211351143'))->dump();
+/* object(Wastukancana\Student) {
+    nim: "211351143",
+    name: null,
+    gender: null,
+    isGraduated: null,
+    admissionYear: 2021,
+    study: "Teknik Informatika",
+    educationLevel: "S1",
+    firstSemester: 1,
+    sequenceNumber: 143
+} */
+```
+
+### Provider (optional)
+
+You can enrich student data by plugging one optional provider class (FQCN). Without a provider, only parser-derived fields are available (year, study, level, semester, sequence). Fields like name, gender, and graduation status will be null until a provider is used.
+
+```php
+use Wastukancana\Nim;
+use Wastukancana\Provider\PDDikti;
+use Wastukancana\Provider\WastuFyi;
+
+$nim = '211351143';
+
+// Using PDDikti provider (pass FQCN)
+$student = (new Nim($nim, PDDikti::class))->dump();
+
+// Using Wastu.FYI provider (requires a Bearer token)
+$token = getenv('WASTU_FYI_TOKEN');
+$student = (new Nim($nim, WastuFyi::class, ['token' => $token])))->dump();
+/* object(Wastukancana\Student) {
+    nim: "211351143",
+    name: "SULUH SULISTIAWAN",
+    gender: "M",
+    isGraduated: true,
+    admissionYear: 2021,
+    study: "Teknik Informatika",
+    educationLevel: "S1",
+    firstSemester: 1,
+    sequenceNumber: 143
+} */
+```
+
 ## Development
 
 Run code style checks and tests locally:
 
 ```bash
 composer psr2check
-php vendor/bin/phpunit --testdox tests
+composer tests
 ```
 
 This repository uses GitHub Actions to run the matrix CI against PHP 7.4 and 8.x with coverage reporting to Codecov.
