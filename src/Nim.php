@@ -2,6 +2,8 @@
 
 namespace Wastukancana;
 
+use InvalidArgumentException;
+
 class Nim extends Parser
 {
     private const MIN_YEAR = 2001;
@@ -19,19 +21,19 @@ class Nim extends Parser
     private function isValid(): bool
     {
         if (strlen($this->nim) < 8 || strlen($this->nim) > 9) {
-            throw new \InvalidArgumentException('NIM must be 8 or 9 characters');
+            throw new InvalidArgumentException('NIM must be 8 or 9 characters');
         }
 
         if (! ctype_digit($this->nim)) {
-            throw new \InvalidArgumentException('NIM must contain only numbers');
+            throw new InvalidArgumentException('NIM must contain only numbers');
         }
 
         if (! $this->isValidAdmissionYear()) {
-            throw new \InvalidArgumentException('Admission year is invalid');
+            throw new InvalidArgumentException('Admission year is invalid');
         }
 
         if (! $this->isValidStudy()) {
-            throw new \InvalidArgumentException('Study cannot be found');
+            throw new InvalidArgumentException('Study cannot be found');
         }
 
         return true;

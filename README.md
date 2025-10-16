@@ -12,7 +12,7 @@ Sekolah Tinggi Teknologi Wastukancana Student ID (NIM) Parser.
 
 ## Requirements
 
-- PHP `>= 7.4`
+- PHP `>= 7.4` (tested on 7.4, 8.0, 8.1, 8.2, 8.3)
 - Composer v2
 - cURL `>= 7.19.4`
 
@@ -30,17 +30,28 @@ composer require wastukancana/nim
 <?php
 
 use Wastukancana\Nim;
+use Exception;
 
 require __DIR__ . '/vendor/autoload.php';
 
 try {
     $nim = new Nim('211351143');
-
     var_dump($nim->dump());
-} catch (\Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
 }
 ```
+
+## Development
+
+Run code style checks and tests locally:
+
+```bash
+composer psr2check
+php vendor/bin/phpunit --testdox tests
+```
+
+This repository uses GitHub Actions to run the matrix CI against PHP 7.4 and 8.x with coverage reporting to Codecov.
 
 ## License
 

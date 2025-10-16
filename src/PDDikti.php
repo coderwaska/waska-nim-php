@@ -2,6 +2,7 @@
 
 namespace Wastukancana;
 
+use Exception;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
@@ -41,7 +42,7 @@ class PDDikti
                     'Access-Control-Request-Headers' => 'X-User-Ip',
                 ],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
 
@@ -54,7 +55,7 @@ class PDDikti
             ]);
 
             return $this->parseResponse($response);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
